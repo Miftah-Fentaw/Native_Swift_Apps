@@ -138,7 +138,7 @@ export function DocsPage() {
           <Block>{`Native_Swift_Apps/
 ├── calculator/        SwiftCalc — Xcode project, README, screenshots
 ├── weather/           Weather — Xcode project, README, screenshots
-├── Journal/           Journal — Xcode project and README
+├── Journal/           Journal — Xcode project, README, screenshots
 ├── website/           This explore hub (React + Vite)
 ├── assets/            Banner and app icons used by the READMEs
 ├── .github/           Issue/PR templates and the website deploy workflow
