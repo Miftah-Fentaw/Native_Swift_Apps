@@ -1,0 +1,10 @@
+{
+  "name": "Native Swift Apps",
+  "short_name": "Swift Apps",
+  "description": "Open-source Swift and SwiftUI apps by Miftah Fentaw.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbfbfd",
+  "theme_color": "#f05138",
+  "icons": [{ "src": "swift.jpeg", "sizes": "155x155", "type": "image/jpeg" }]
+}
