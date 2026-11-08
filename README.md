@@ -50,10 +50,21 @@ Projects are grouped by difficulty — **Beginner**, **Intermediate** and **Adva
     </td>
     <td width="80" align="right"><a href="weather/README.md"><sub>README&nbsp;→</sub></a></td>
   </tr>
+  <tr>
+    <td width="56" align="center"><a href="Journal/"><img src="assets/journal.png" width="44" height="44" alt="Journal icon"></a></td>
+    <td>
+      <a href="Journal/"><b>Journal</b></a>&nbsp;
+      <img src="https://img.shields.io/badge/Intermediate-FF9F0A?style=flat-square" alt="Intermediate" height="16">
+      <img src="https://img.shields.io/badge/iOS%20·%20iPadOS-1C1C1E?style=flat-square&logo=apple&logoColor=white" alt="iOS and iPadOS" height="16"><br>
+      <sub>Private journal with moods, checklists, photos, a calendar and insights.</sub>
+    </td>
+    <td width="80" align="right"><a href="Journal/README.md"><sub>README&nbsp;→</sub></a></td>
+  </tr>
 </table>
 
 **SwiftCalc:** SwiftUI layout, `@Observable` state, `@AppStorage`, a hand-written expression parser, `Measurement` units, Swift Testing.  
-**Weather:** `URLSession` with `async`/`await`, `Codable` JSON decoding, MapKit for SwiftUI, shared `@Observable` state, `UserDefaults` persistence.
+**Weather:** `URLSession` with `async`/`await`, `Codable` JSON decoding, MapKit for SwiftUI, shared `@Observable` state, `UserDefaults` persistence.  
+**Journal:** SwiftData models, Swift Charts mood trends, PhotosUI, LocalAuthentication, a custom masonry layout.
 
   
 
@@ -81,6 +92,11 @@ What the projects in this repository use today:
 | **Foundation** | Formatting, `Measurement` unit conversion, `UserDefaults` storage, `Codable` JSON |
 | **URLSession** | Networking with `async`/`await` (Weather) |
 | **MapKit** | Maps in SwiftUI (Weather) |
+| **SwiftData** | On-device journal entries (Journal) |
+| **Swift Charts** | Mood trends (Journal) |
+| **PhotosUI** | Entry and profile photos (Journal) |
+| **LocalAuthentication** | Face ID or passcode lock (Journal) |
+| **UserNotifications** | Daily writing reminder (Journal) |
 | **Swift Testing** | Unit tests |
 | **XCTest** | UI and launch tests |
 
@@ -97,7 +113,7 @@ Clone the repository, then open a project folder in Xcode.
 git clone https://github.com/Miftah-Fentaw/Native_Swift_Apps.git
 ```
 
-Each project's README covers its requirements, setup, features and architecture. Start with [SwiftCalc](calculator/README.md) or [Weather](weather/README.md).
+Each project's README covers its requirements, setup, features and architecture. Start with [SwiftCalc](calculator/README.md), [Weather](weather/README.md), or [Journal](Journal/README.md).
 
 ### Explore hub website
 
