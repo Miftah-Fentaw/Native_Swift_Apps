@@ -29,10 +29,28 @@ Projects are grouped by difficulty — **Beginner**, **Intermediate** and **Adva
 
 ## Projects
 
-|                                          |                                                                                                                                                                                                                                                                                                                                                        |          |
-| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- |
-| ![SwiftCalc icon](assets/calculator.jpg) | **SwiftCalc** A calculator, tip splitter and unit converter in one app, with scientific functions, history and light and dark themes. ![Beginner](https://img.shields.io/badge/Beginner-34C759?style=flat-square) ![iOS and iPadOS 27.2+](https://img.shields.io/badge/iOS%20·%20iPadOS%2027.2%2B-1C1C1E?style=flat-square&logo=apple&logoColor=white) | README → |
-| ![Weather icon](assets/weather.jpg)      | **Weather** Live conditions, hourly and 14-day forecasts, air quality, a map and saved cities, powered by Open-Meteo with no API key. ![Beginner](https://img.shields.io/badge/Beginner-34C759?style=flat-square) ![iOS and iPadOS 27.2+](https://img.shields.io/badge/iOS%20·%20iPadOS%2027.2%2B-1C1C1E?style=flat-square&logo=apple&logoColor=white) | README → |
+<table>
+  <tr>
+    <td width="56" align="center"><a href="calculator/"><img src="assets/calculator.jpg" width="44" height="44" alt="SwiftCalc icon"></a></td>
+    <td>
+      <a href="calculator/"><b>SwiftCalc</b></a>&nbsp;
+      <img src="https://img.shields.io/badge/Beginner-34C759?style=flat-square" alt="Beginner" height="16">
+      <img src="https://img.shields.io/badge/iOS%20·%20iPadOS-1C1C1E?style=flat-square&logo=apple&logoColor=white" alt="iOS and iPadOS" height="16"><br>
+      <sub>Calculator, tip splitter and unit converter with scientific functions and history.</sub>
+    </td>
+    <td width="80" align="right"><a href="calculator/README.md"><sub>README&nbsp;→</sub></a></td>
+  </tr>
+  <tr>
+    <td width="56" align="center"><a href="weather/"><img src="assets/weather.jpg" width="44" height="44" alt="Weather icon"></a></td>
+    <td>
+      <a href="weather/"><b>Weather</b></a>&nbsp;
+      <img src="https://img.shields.io/badge/Beginner-34C759?style=flat-square" alt="Beginner" height="16">
+      <img src="https://img.shields.io/badge/iOS%20·%20iPadOS-1C1C1E?style=flat-square&logo=apple&logoColor=white" alt="iOS and iPadOS" height="16"><br>
+      <sub>Live conditions, 14-day forecasts, air quality and a map, powered by Open-Meteo.</sub>
+    </td>
+    <td width="80" align="right"><a href="weather/README.md"><sub>README&nbsp;→</sub></a></td>
+  </tr>
+</table>
 
 **SwiftCalc:** SwiftUI layout, `@Observable` state, `@AppStorage`, a hand-written expression parser, `Measurement` units, Swift Testing.  
 **Weather:** `URLSession` with `async`/`await`, `Codable` JSON decoding, MapKit for SwiftUI, shared `@Observable` state, `UserDefaults` persistence.
