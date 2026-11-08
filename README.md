@@ -99,6 +99,10 @@ git clone https://github.com/Miftah-Fentaw/Native_Swift_Apps.git
 
 Each project's README covers its requirements, setup, features and architecture. Start with [SwiftCalc](calculator/README.md) or [Weather](weather/README.md).
 
+### Explore hub website
+
+[`website/`](website/) is a React site that lists every project, its screenshots, features and technology, with search and filters. See its [README](website/README.md) to run it locally.
+
   
 
 
