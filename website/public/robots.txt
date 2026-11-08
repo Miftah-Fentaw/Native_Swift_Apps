@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://miftah-fentaw.github.io/Native_Swift_Apps/sitemap.xml
