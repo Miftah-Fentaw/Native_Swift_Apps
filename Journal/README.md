@@ -18,6 +18,7 @@
 
 <p align="center">
   <a href="#overview">Overview</a>&nbsp;&nbsp;·&nbsp;&nbsp;
+  <a href="#screenshots">Screenshots</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#features">Features</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#usage">Usage</a>&nbsp;&nbsp;·&nbsp;&nbsp;
   <a href="#getting-started">Getting Started</a>&nbsp;&nbsp;·&nbsp;&nbsp;
@@ -47,6 +48,37 @@ Journal is the first **Intermediate** project in [Native Swift Apps](../README.m
 The app uses Swift, SwiftUI and first-party frameworks only: SwiftData, Swift Charts, PhotosUI, LocalAuthentication and UserNotifications. There are no third-party packages.
 
 **What you'll learn:** modeling data with SwiftData, querying it with `@Query`, drawing charts, picking and compressing photos, locking the app with Face ID or a passcode, and building a custom masonry layout.
+
+<br>
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center" width="25%"><img src="screenshots/homelight.png" width="200" alt="Journal home in light mode"><br><sub>Home · Light</sub></td>
+    <td align="center" width="25%"><img src="screenshots/calhome.png" width="200" alt="Calendar in light mode"><br><sub>Calendar · Light</sub></td>
+    <td align="center" width="25%"><img src="screenshots/calblack.png" width="200" alt="Calendar in dark mode"><br><sub>Calendar · Dark</sub></td>
+    <td align="center" width="25%"><img src="screenshots/insightlight.png" width="200" alt="Insights in light mode"><br><sub>Insights · Light</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><img src="screenshots/insightblack.png" width="200" alt="Insights in dark mode"><br><sub>Insights · Dark</sub></td>
+    <td align="center" width="25%"><img src="screenshots/searchlight.png" width="200" alt="Search in light mode"><br><sub>Search · Light</sub></td>
+    <td align="center" width="25%"><img src="screenshots/searchblack.png" width="200" alt="Search filtered by mood in dark mode"><br><sub>Search · Dark</sub></td>
+    <td align="center" width="25%"><img src="screenshots/settingslight.png" width="200" alt="Settings in light mode"><br><sub>Settings</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><img src="screenshots/create.png" width="200" alt="New entry editor with a photo"><br><sub>New entry</sub></td>
+    <td align="center" width="25%"><img src="screenshots/edit.png" width="200" alt="Entry detail with photo and tag"><br><sub>Entry</sub></td>
+    <td align="center" width="25%"><img src="screenshots/onboard1.png" width="200" alt="Onboarding welcome page"><br><sub>Welcome</sub></td>
+    <td align="center" width="25%"><img src="screenshots/onboard2.png" width="200" alt="Onboarding checklist page"><br><sub>Checklists</sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="25%"><img src="screenshots/onboard3.png" width="200" alt="Onboarding mood and streak page"><br><sub>Mood</sub></td>
+    <td align="center" width="25%"><img src="screenshots/onboard4.png" width="200" alt="Onboarding name page"><br><sub>Your name</sub></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
 
 <br>
 
@@ -242,7 +274,6 @@ Good first contributions here: unit tests for `JournalStats` streaks, `Mood.scor
 - **Sample entries** are inserted only the first time the app launches. Settings can add them again on purpose.
 - **The editor** is shown in light appearance so the pastel card stays readable while you write. The rest of the app follows the appearance you pick in Settings.
 - **Notifications** stay on the device. If permission is denied, the reminder toggle turns back off.
-- **Screenshots** for this app are not in the repository yet.
 - **Platforms:** iPhone and iPad only.
 
 <br>
