@@ -1,7 +1,7 @@
 {
   "name": "Native Swift Apps",
   "short_name": "Swift Apps",
-  "description": "Open-source Swift and SwiftUI apps by Miftah Fentaw.",
+  "description": "Learn Swift and SwiftUI from real apps: native apps by Miftah Fentaw plus hand-picked open-source community Swift apps.",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#fbfbfd",
