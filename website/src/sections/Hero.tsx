@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { REPO_URL, allScreens, type Screen } from '../data/projects'
+import { REPO_URL, allScreens, community, type Screen } from '../data/projects'
 import { Icon, Phone } from '../components/ui'
 
 type Token = { type: 'word'; text: string } | { type: 'swift' }
@@ -52,7 +52,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          Open source · Swift & SwiftUI · iOS & iPadOS
+          Open source · Swift & SwiftUI · iPhone, iPad, Mac & more
         </motion.div>
 
         <h1 className="h-display hero-title">
@@ -96,8 +96,8 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 1 }}
         >
-          A growing collection of complete, native apps — each with its own Xcode project, README and screenshots. Clone one, run it,
-          and read how it works.
+          A growing collection of complete, native apps — each with its own Xcode project, README and screenshots — plus{' '}
+          {community.length} hand-picked open-source Swift apps from the community. Clone one, run it, and read how it works.
         </motion.p>
 
         <motion.div
@@ -108,6 +108,9 @@ export function Hero() {
         >
           <Link to="/explore" className="btn btn-primary">
             Explore projects {Icon.arrow}
+          </Link>
+          <Link to="/explore?source=community" className="btn btn-ghost">
+            Community apps
           </Link>
           <a href="#/?s=ask" className="btn btn-ghost">
             Ask the hub

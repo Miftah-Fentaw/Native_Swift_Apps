@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { AUTHOR, CLONE_COMMAND, REPO_URL, projects, roadmap, allTech, type Project } from '../data/projects'
+import { AUTHOR, CLONE_COMMAND, REPO_URL, allTech, community, isCommunity, projects, roadmap, type Project } from '../data/projects'
 import { AppIcon, Icon, LevelBadge, Phone, StatusBadge } from './ui'
 
 export function Nav({ theme, onToggleTheme, onOpenSearch }: { theme: string; onToggleTheme: () => void; onOpenSearch: () => void }) {
@@ -19,8 +19,12 @@ export function Nav({ theme, onToggleTheme, onOpenSearch }: { theme: string; onT
             <img src="./swift.jpeg" alt="" />
           </Link>
           <div className="nav-links">
-            <NavLink to="/explore">Explore</NavLink>
+            <NavLink to="/explore" end>
+              Explore
+            </NavLink>
             <NavLink to="/docs">Docs</NavLink>
+            {/* Third and later links are hidden on phones; the community apps are one tap away from Explore. */}
+            <a href="#/explore?source=community">Community</a>
             <a href="#/?s=path">Learning path</a>
             <a href="#/?s=roadmap">Roadmap</a>
           </div>
@@ -105,6 +109,7 @@ export function Footer() {
 
         <FooterColumn title="Explore">
           <Link to="/explore">All projects</Link>
+          <Link to="/explore?source=community">Community apps ({community.length})</Link>
           <Link to="/docs">Documentation</Link>
           <a href="#/?s=path">Learning path</a>
           <a href="#/?s=ask">Ask the hub</a>
@@ -177,6 +182,15 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
         <div className="project-card-media">
           {shots.length > 0 ? (
             shots.map((s) => <Phone key={s.src} screen={s} />)
+          ) : isCommunity(project) ? (
+            <div className="community-media">
+              <AppIcon project={project} size={72} />
+              <span className="community-repo">
+                {Icon.github}
+                {project.repo}
+              </span>
+              {project.platforms && <span className="community-platforms">{project.platforms}</span>}
+            </div>
           ) : (
             <div className="empty-media">
               <AppIcon project={project} size={72} />
@@ -235,6 +249,13 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         hint: t.projects.map((p) => p.name).join(', '),
         run: go(`/explore?tech=${encodeURIComponent(t.name)}`),
       })),
+      ...community.map((p) => ({
+        group: 'Community apps',
+        label: p.name,
+        hint: `${p.level} · ${p.repo}`,
+        project: p,
+        run: go(`/projects/${p.slug}`),
+      })),
       ...roadmap.map((p) => ({ group: 'Roadmap', label: p.name, hint: `${p.level} · planned`, run: go('/?s=roadmap') })),
       {
         group: 'Actions',
@@ -248,7 +269,14 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       { group: 'Actions', label: 'Open the GitHub repository', run: () => (window.open(REPO_URL, '_blank'), onClose()) },
     ]
     const q = query.trim().toLowerCase()
-    if (!q) return all.filter((i) => i.group !== 'Features').slice(0, 14)
+    // With no query, show the repo's own apps, a few community apps and the actions.
+    if (!q)
+      return [
+        ...all.filter((i) => i.group === 'Projects'),
+        ...all.filter((i) => i.group === 'Community apps').slice(0, 5),
+        ...all.filter((i) => i.group === 'Technology').slice(0, 4),
+        ...all.filter((i) => i.group === 'Actions'),
+      ]
     return all.filter((i) => `${i.label} ${i.hint ?? ''}`.toLowerCase().includes(q)).slice(0, 30)
   }, [query, navigate, onClose])
 

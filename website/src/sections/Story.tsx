@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, animate, type MotionValue } from 'motion/react'
 import { useEffect, useState } from 'react'
-import { allScreens, allTech, projects, roadmap } from '../data/projects'
+import { allScreens, allTech, community, projects, roadmap } from '../data/projects'
 
 // Alternate between apps so the pile shows more than one project.
 const pileScreens = (() => {
@@ -31,6 +31,7 @@ function CountUp({ to }: { to: number }) {
 export function Stats() {
   const stats = [
     { value: projects.length, label: 'Apps in the repo' },
+    { value: community.length, label: 'Community apps' },
     { value: allScreens.length, label: 'Real screenshots' },
     { value: allTech.length, label: 'Apple technologies' },
     { value: roadmap.length, label: 'Apps on the roadmap' },

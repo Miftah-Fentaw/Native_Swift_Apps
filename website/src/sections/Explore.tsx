@@ -3,12 +3,15 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useScroll, useTransform } from 'motion/react'
 import {
   CLONE_COMMAND,
+  allProjects,
   allScreens,
   allTech,
+  community,
   levels,
   projects,
   roadmap,
   searchProjects,
+  type Level,
   type Project,
   type Screen,
 } from '../data/projects'
@@ -173,8 +176,10 @@ function RoadmapGrid() {
 const SUGGESTIONS = [
   'Which app uses async networking?',
   'Show me SwiftData and Charts',
+  'A habit tracker with CloudKit sync',
   'Where can I learn MapKit?',
-  'An expression parser with unit tests',
+  'A macOS menu bar app',
+  'Bluetooth or multiplayer networking',
 ]
 
 /** Local "ask" demo: types a question, shows working steps, then real matches from the project data. */
@@ -223,7 +228,7 @@ export function AskHub() {
     setAsked(q)
     setPhase('thinking')
     setStep(0)
-    const pool = [...projects]
+    const pool = [...allProjects]
     window.setTimeout(() => setStep(1), 550)
     window.setTimeout(() => setStep(2), 1100)
     window.setTimeout(() => {
@@ -232,7 +237,7 @@ export function AskHub() {
     }, 1650)
   }
 
-  const steps = ['Scanning projects…', 'Reading features and READMEs…', 'Ranking matches…']
+  const steps = ['Scanning repo and community apps…', 'Reading features and READMEs…', 'Ranking matches…']
 
   return (
     <section className="section" id="ask" style={{ background: 'var(--bg-sunken)' }}>
@@ -292,16 +297,16 @@ export function AskHub() {
                 <motion.div key="done" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                   <div className="muted" style={{ fontSize: 14 }}>
                     {results.length > 0
-                      ? `Found ${results.length} ${results.length === 1 ? 'app' : 'apps'} for “${asked}”`
+                      ? `Found ${results.length} ${results.length === 1 ? 'app' : 'apps'} for “${asked}”${results.length > 6 ? ' — showing the best 6' : ''}`
                       : `Nothing matches “${asked}” yet — check the roadmap, or suggest it on GitHub.`}
                   </div>
-                  {results.map((r, i) => (
+                  {results.slice(0, 6).map((r, i) => (
                     <motion.div key={r.project.slug} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
                       <Link to={`/projects/${r.project.slug}`} className="ask-hit">
                         <AppIcon project={r.project} size={40} />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <b>{r.project.name}</b>
-                          <small>{r.hits.join(' · ')}</small>
+                          <small>{r.project.repo ? `${r.project.repo} · ` : ''}{r.hits.join(' · ')}</small>
                         </div>
                         <StatusBadge project={r.project} />
                         {Icon.arrow}
@@ -350,7 +355,9 @@ export function LearningPath() {
           <div style={{ textAlign: 'center' }}>
             <div className="eyebrow">Learning path</div>
             <h2 className="h-section">Start simple. Level up.</h2>
-            <p className="lead center">Every app is tagged by difficulty, so you always know what to pick up next.</p>
+            <p className="lead center">
+              Every app — in this repo or from the community — is tagged by difficulty, so you always know what to pick up next.
+            </p>
           </div>
         </Reveal>
 
@@ -372,10 +379,97 @@ export function LearningPath() {
                     .map((p) => (
                       <PathApp key={p.slug} project={p} />
                     ))}
+                  <Link className="path-app path-community" to={`/explore?source=community&level=${l.level}`}>
+                    <span className="path-avatars" aria-hidden>
+                      {community
+                        .filter((p) => p.level === l.level)
+                        .slice(0, 3)
+                        .map((p) => (
+                          <AppIcon key={p.slug} project={p} size={22} />
+                        ))}
+                    </span>
+                    <span className="grow">+ {community.filter((p) => p.level === l.level).length} community apps</span>
+                    <span style={{ color: 'var(--text-3)' }}>{Icon.arrow}</span>
+                  </Link>
                 </div>
               </div>
             </Reveal>
           ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const SHOWCASE_LEVELS: Level[] = ['Beginner', 'Intermediate', 'Advanced']
+
+/** Hand-picked open-source Swift apps by other developers, browsed by level. */
+export function CommunityShowcase() {
+  const [level, setLevel] = useState<Level>('Beginner')
+  const apps = community.filter((p) => p.level === level)
+
+  return (
+    <section className="section" id="community">
+      <div className="container">
+        <Reveal>
+          <div style={{ textAlign: 'center' }}>
+            <div className="eyebrow">Explore more</div>
+            <h2 className="h-section">
+              {community.length} community apps.
+              <br />
+              <span className="muted">Real codebases to learn from.</span>
+            </h2>
+            <p className="lead center">
+              Open-source Swift apps by other developers, picked for learning — from a menu bar timer to a Mastodon client. They live in
+              their own GitHub repositories; this hub links to them.
+            </p>
+          </div>
+        </Reveal>
+
+        <div style={{ textAlign: 'center' }}>
+          <div className="tabs" role="tablist" aria-label="Community apps by level">
+            {SHOWCASE_LEVELS.map((l) => (
+              <button key={l} role="tab" aria-selected={level === l} className={`tab ${level === l ? 'active' : ''}`} onClick={() => setLevel(l)}>
+                {level === l && <motion.div layoutId="community-pill" className="tab-pill" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+                <span>
+                  {l} <small className="tab-count">{community.filter((p) => p.level === l).length}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={level}
+            className="community-grid"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+          >
+            {apps.map((p) => (
+              <Link key={p.slug} to={`/projects/${p.slug}`} className="community-tile" style={{ ['--card-accent' as string]: p.accent }}>
+                <AppIcon project={p} size={44} />
+                <div className="community-tile-body">
+                  <div className="community-tile-head">
+                    <b>{p.name}</b>
+                    <small>{p.platforms}</small>
+                  </div>
+                  <p>{p.tagline}</p>
+                  <small className="community-tile-repo">
+                    {Icon.github} {p.repo}
+                  </small>
+                </div>
+              </Link>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <Link to={`/explore?source=community&level=${level}`} className="btn btn-ghost">
+            Browse {level.toLowerCase()} community apps {Icon.arrow}
+          </Link>
         </div>
       </div>
     </section>
@@ -390,7 +484,8 @@ export function TechStack() {
           <div className="eyebrow">Technology</div>
           <h2 className="h-section">Native, first-party, no shortcuts.</h2>
           <p className="lead">
-            Only Apple frameworks — no third-party packages. Each card shows which apps use that technology today.
+            The apps in this repo use only Apple frameworks — no third-party packages. Each card shows which of them use that technology
+            today.
           </p>
         </Reveal>
         <TechGrid />

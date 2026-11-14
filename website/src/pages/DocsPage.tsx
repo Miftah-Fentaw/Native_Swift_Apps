@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { AUTHOR, CLONE_COMMAND, REPO_URL, SITE_URL, githubReadme, projects, roadmap } from '../data/projects'
+import { AUTHOR, CLONE_COMMAND, REPO_URL, SITE_URL, community, githubReadme, githubRepoUrl, levels, projects, roadmap } from '../data/projects'
 import { AppIcon, CopyButton, LevelBadge, StatusBadge, usePageTitle } from '../components/ui'
 
 const SECTIONS = [
@@ -9,8 +9,10 @@ const SECTIONS = [
   { id: 'quick-start', title: 'Quick start' },
   { id: 'structure', title: 'Repository structure' },
   { id: 'projects', title: 'Projects' },
+  { id: 'community', title: 'Community apps' },
   { id: 'website', title: 'Using this website' },
   { id: 'adding', title: 'Adding a project' },
+  { id: 'adding-community', title: 'Suggesting a community app' },
   { id: 'deploying', title: 'Deploying the website' },
   { id: 'contributing', title: 'Contributing' },
   { id: 'faq', title: 'FAQ' },
@@ -70,7 +72,10 @@ const scrollTo = (id: string) => {
 }
 
 export function DocsPage() {
-  usePageTitle('Documentation', 'How to run, explore and contribute to Native Swift Apps, and how the explore hub website works.')
+  usePageTitle(
+    'Documentation',
+    'How to run the Native Swift Apps projects, explore the community Swift apps, contribute, and how the explore hub website works.',
+  )
   const active = useScrollSpy(SECTIONS.map((s) => s.id))
 
   // Deep links such as #/docs?s=quick-start
@@ -94,12 +99,13 @@ export function DocsPage() {
       <motion.article className="docs-body" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <div className="eyebrow">Documentation</div>
         <h1 className="h-section">Native Swift Apps docs</h1>
-        <p className="lead">Everything you need to run the apps, find your way around the repository and contribute.</p>
+        <p className="lead">Everything you need to run the apps, explore the community picks, find your way around the repository and contribute.</p>
 
         <Section id="introduction" title="Introduction">
           <p>
             Native Swift Apps is an open-source collection of complete apps built with Swift and SwiftUI. Every app is a self-contained
             Xcode project with its own README, so you can learn by reading, running and extending real code instead of isolated snippets.
+            Alongside them, the hub links to {community.length} hand-picked open-source Swift apps by other developers.
           </p>
           <ul>
             <li>
@@ -109,7 +115,11 @@ export function DocsPage() {
               <b>Grouped by difficulty:</b> Beginner, Intermediate and Advanced.
             </li>
             <li>
-              <b>Platforms:</b> the current apps run on iPhone and iPad (iOS / iPadOS 27.2 or later).
+              <b>Platforms:</b> the apps in this repo run on iPhone and iPad (iOS / iPadOS 27.2 or later). Community apps also cover macOS,
+              watchOS, tvOS and visionOS.
+            </li>
+            <li>
+              <b>Community apps:</b> they live in their own GitHub repositories, under their own licenses. This repo only links to them.
             </li>
           </ul>
         </Section>
@@ -181,20 +191,63 @@ export function DocsPage() {
           </p>
         </Section>
 
+        <Section id="community" title="Community apps">
+          <p>
+            {community.length} open-source Swift apps by other developers, picked because they are good to learn from: native Swift, open
+            source, and maintained or worth reading as a reference. They are not part of this repository — each card links to the app’s own
+            GitHub repository, and its license applies there.
+          </p>
+          {levels.map((l) => (
+            <div key={l.level} style={{ marginTop: 24 }}>
+              <h3 className="doc-h3">
+                {l.level} <span className="muted">· {community.filter((p) => p.level === l.level).length} apps</span>
+              </h3>
+              <div className="doc-table">
+                {community
+                  .filter((p) => p.level === l.level)
+                  .map((p) => (
+                    <Link key={p.slug} to={`/projects/${p.slug}`} className="doc-row">
+                      <AppIcon project={p} size={36} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <b>{p.name}</b>
+                        <div className="muted" style={{ fontSize: 13 }}>
+                          {p.repo} · {p.platforms}
+                        </div>
+                      </div>
+                      <span className="badge" style={{ ['--badge' as string]: 'var(--text-2)' }}>
+                        {p.license}
+                      </span>
+                      <LevelBadge project={p} />
+                    </Link>
+                  ))}
+              </div>
+            </div>
+          ))}
+          <p style={{ marginTop: 20 }}>
+            Some need setup before they run — an API key, a server or Xcode itself. Each project page says so under <b>Run it</b>. The same
+            list is in the <b>Explore More</b> section of the{' '}
+            <a className="doc-link" href={`${REPO_URL}#explore-more`} target="_blank" rel="noreferrer">
+              root README
+            </a>
+            .
+          </p>
+        </Section>
+
         <Section id="website" title="Using this website">
           <ul>
             <li>
-              <b>Explore</b> lists every app with filters for level and technology, plus search.
+              <b>Explore</b> lists every app with filters for source (this repo or community), level, platform and technology, plus search.
             </li>
             <li>
-              <b>Project pages</b> show screenshots (click to enlarge), features, what you’ll learn and copy-ready run commands.
+              <b>Project pages</b> show screenshots (click to enlarge), features, what you’ll learn and copy-ready run commands. Community
+              app pages link to the app’s GitHub repository and show its license, star count and any setup it needs.
             </li>
             <li>
-              <b>Ask the hub</b> on the home page matches your question against each app’s features and technology. It runs entirely in
-              your browser.
+              <b>Ask the hub</b> on the home page matches your question against the features and technology of every app, community apps
+              included. It runs entirely in your browser.
             </li>
             <li>
-              <b>⌘K / Ctrl+K</b> opens a command palette for projects, features, technology and quick actions.
+              <b>⌘K / Ctrl+K</b> opens a command palette for projects, community apps, features, technology and quick actions.
             </li>
             <li>
               <b>Theme:</b> follows your system setting; use the sun/moon button to switch.
@@ -221,6 +274,34 @@ export function DocsPage() {
               If the folder is new, add it to the <code>sources</code> list in <code>website/scripts/sync-assets.mjs</code>.
             </li>
           </ol>
+        </Section>
+
+        <Section id="adding-community" title="Suggesting a community app">
+          <p>Know an open-source Swift app that others would learn from? Good candidates are native Swift, open source with a clear license, and still building with a recent Xcode.</p>
+          <ol className="steps">
+            <li>
+              Open an issue or pull request on{' '}
+              <a className="doc-link" href={REPO_URL} target="_blank" rel="noreferrer">
+                GitHub
+              </a>{' '}
+              with the repository link, a level and a one-line description.
+            </li>
+            <li>
+              To add it yourself, add a row to the <b>Explore More</b> section of the root README, in the table for its level.
+            </li>
+            <li>
+              Add an <code>external({'{ … }'})</code> entry to <code>community</code> in <code>website/src/data/projects.ts</code> with its
+              name, <code>owner/repo</code>, level, platforms, license, tagline, description, technologies and what it teaches.
+            </li>
+          </ol>
+          <p className="muted">
+            Write the description from the app’s own README, and never copy its code or screenshots into this repository — link to them
+            instead, for example{' '}
+            <a className="doc-link" href={githubRepoUrl(community[0].repo!)} target="_blank" rel="noreferrer">
+              {community[0].repo}
+            </a>
+            .
+          </p>
         </Section>
 
         <Section id="deploying" title="Deploying the website">
@@ -269,15 +350,36 @@ export function DocsPage() {
         <Section id="faq" title="FAQ">
           <details className="faq">
             <summary>Do the apps need any API keys or accounts?</summary>
-            <p>No. SwiftCalc and Journal work fully offline. Weather uses the free Open-Meteo APIs, which need no key.</p>
+            <p>
+              Not the apps in this repo: SwiftCalc and Journal work fully offline, and Weather uses the free Open-Meteo APIs, which need no
+              key. A few community apps do — for example News App needs a NewsAPI key and Enchanted needs an Ollama server. Their project
+              pages say so.
+            </p>
           </details>
           <details className="faq">
             <summary>Do the apps run on macOS?</summary>
-            <p>Not yet. The current apps target iPhone and iPad.</p>
+            <p>
+              The apps in this repo target iPhone and iPad. Many community apps run on the Mac — use the <b>macOS</b> filter on the{' '}
+              <Link className="doc-link" to="/explore?source=community&platform=macOS">
+                Explore page
+              </Link>
+              .
+            </p>
           </details>
           <details className="faq">
             <summary>Can I use this code in my own app?</summary>
-            <p>Yes — everything is MIT licensed. Check third-party data terms too, such as Open-Meteo’s for commercial use.</p>
+            <p>
+              The code in this repository is MIT licensed — check third-party data terms too, such as Open-Meteo’s for commercial use.
+              Community apps have their own licenses (MIT, Apache, GPL, AGPL and others), shown on each project page. Read the license before
+              reusing any of their code.
+            </p>
+          </details>
+          <details className="faq">
+            <summary>Who maintains the community apps?</summary>
+            <p>
+              Their own authors. Report bugs and send pull requests to the app’s repository, not to Native Swift Apps. If a link breaks or an
+              app is no longer a good pick, open an issue here.
+            </p>
           </details>
           <details className="faq">
             <summary>Is “Ask the hub” using AI?</summary>
@@ -295,7 +397,8 @@ export function DocsPage() {
             <a className="doc-link" href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noreferrer">
               MIT License
             </a>
-            . Weather data in the Weather app is provided by Open-Meteo.
+            . Weather data in the Weather app is provided by Open-Meteo. Community apps belong to their authors and are listed with links to
+            their repositories; their names, code and icons remain theirs.
           </p>
         </Section>
       </motion.article>

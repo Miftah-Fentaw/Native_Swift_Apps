@@ -3,14 +3,15 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Explore hub website for the Native Swift Apps repository.",
+  "description": "Explore hub website for the Native Swift Apps repository and its hand-picked community Swift apps.",
   "scripts": {
     "sync": "node scripts/sync-assets.mjs",
     "predev": "npm run sync",
     "dev": "vite",
     "prebuild": "npm run sync",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "readme": "node scripts/readme.ts"
   },
   "dependencies": {
     "motion": "^12.18.1",

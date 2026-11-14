@@ -133,7 +133,7 @@ The app uses Swift, SwiftUI and first-party frameworks only: SwiftData, Swift Ch
 
 - Name, short bio and profile photo.
 - Stats for your writing days, current streak and entries this week.
-- A weekly writing goal, from 1 to 7 days.
+- A weekly goal of 1 to 14 entries (5 by default), with a progress ring.
 - Reset the profile photo, name and bio.
 
 ### Settings
