@@ -1,24 +1,43 @@
 import { useEffect, useState, type ReactNode } from 'react'
 
 const BASE_TITLE = 'Native Swift Apps'
-const DEFAULT_DESCRIPTION =
-  'Explore Native Swift Apps by Miftah Fentaw: open-source, native Swift and SwiftUI apps for iOS and iPadOS, each with source code, screenshots and docs.'
+const DEFAULT_DESCRIPTION = `Learn Swift and SwiftUI from real apps: native iOS and iPadOS apps by Miftah Fentaw with source code, screenshots and docs, plus ${community.length} hand-picked open-source Swift apps for iPhone, iPad, Mac, Apple Watch and Apple TV, sorted from beginner to advanced.`
 
 /** Sets the browser tab title (and description, when given) for the current page. */
 export function usePageTitle(title?: string, description?: string) {
   useEffect(() => {
-    document.title = title ? `${title} — ${BASE_TITLE}` : `${BASE_TITLE} — Open-source Swift & SwiftUI apps by Miftah Fentaw`
+    document.title = title ? `${title} — ${BASE_TITLE}` : `${BASE_TITLE} — Learn Swift & SwiftUI from real open-source apps`
     document
       .querySelector('meta[name="description"]')
       ?.setAttribute('content', description ?? DEFAULT_DESCRIPTION)
   }, [title, description])
 }
 import { AnimatePresence, motion } from 'motion/react'
-import { levelColor, type Project, type Screen } from '../data/projects'
+import { community, levelColor, type Project, type Screen } from '../data/projects'
 
 export function AppIcon({ project, size = 44 }: { project: Project; size?: number }) {
-  if (project.icon) {
-    return <img className="app-icon" src={project.icon} alt="" width={size} height={size} style={{ width: size, height: size }} />
+  // Community apps use their GitHub owner's avatar, loaded from github.com; fall back to initials if it fails.
+  // Failure is tracked per URL, so reusing this component for another project starts fresh.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null)
+  const icon = project.icon
+  if (icon && failedSrc !== icon) {
+    const remote = icon.startsWith('http')
+    return (
+      <img
+        // A new element per URL, so the previous project's icon never lingers while the next one loads.
+        key={icon}
+        className="app-icon"
+        src={icon}
+        alt=""
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+        loading={remote ? 'lazy' : undefined}
+        decoding="async"
+        referrerPolicy={remote ? 'no-referrer' : undefined}
+        onError={() => setFailedSrc(icon)}
+      />
+    )
   }
   return (
     <span className="icon-placeholder" style={{ width: size, height: size, fontSize: size * 0.34 }} aria-hidden>
@@ -46,7 +65,8 @@ export function StatusBadge({ project }: { project: Project }) {
     'in-progress': { label: 'In progress', color: '#e0794f' },
     planned: { label: 'Planned', color: '#8e8e93' },
   } as const
-  const s = map[project.status]
+  // Community apps are always "available" — say where they come from instead.
+  const s = project.source === 'community' ? { label: 'Community', color: '#2f80ed' } : map[project.status]
   return (
     <span className="badge" style={{ ['--badge' as string]: s.color }}>
       {s.label}
