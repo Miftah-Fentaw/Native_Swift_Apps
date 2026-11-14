@@ -10,6 +10,7 @@ By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 - **Suggest an improvement** — open an issue using the *Feature request* template.
 - **Improve documentation** — clarify a project README, fix errors, or add missing setup notes.
 - **Submit code** — fix a bug or implement an agreed-upon improvement in one of the projects.
+- **Suggest a community app** — recommend an open-source Swift app for the [Explore More](README.md#explore-more) list. See [Suggesting a Community App](#suggesting-a-community-app).
 
 For larger changes, such as a new feature or significant refactor, please open an issue first so the approach can be discussed before you invest time in it.
 
@@ -44,6 +45,26 @@ Please keep changes scoped to the project you are working on.
 3. Build and run the project on every platform it supports (listed in its README).
 4. Run the project's tests in Xcode (**Product → Test**, or `⌘U`) and make sure they pass.
 5. Update the project's README if your change affects features, requirements or setup.
+
+## Suggesting a Community App
+
+The [Explore More](README.md#explore-more) list links to open-source Swift apps by other developers. A good candidate:
+
+- is written in Swift for an Apple platform, with its source on GitHub;
+- has a clear open-source license;
+- still builds with a recent Xcode, or is well worth reading as a reference;
+- teaches something a learner can take away — a framework, a pattern or an architecture.
+
+To suggest one, open an issue with the *Community app suggestion* template. To add it yourself:
+
+1. Add an entry to `community` in [`website/src/data/projects.ts`](website/src/data/projects.ts) with its name, `owner/repo`, level, platforms, license, tagline, description, technologies and what it teaches. Write the text from the app's own README.
+2. Regenerate the README tables from that data (needs Node.js 22.18 or later):
+
+   ```bash
+   cd website && npm run readme
+   ```
+
+3. Open a pull request. Never copy another project's code or screenshots into this repository — link to them.
 
 ## Code Style
 
