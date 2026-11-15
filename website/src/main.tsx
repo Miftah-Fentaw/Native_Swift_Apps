@@ -9,6 +9,20 @@ import { Home } from './pages/Home'
 const ExplorePage = lazy(() => import('./pages/ExplorePage').then((m) => ({ default: m.ExplorePage })))
 const ProjectPage = lazy(() => import('./pages/ProjectPage').then((m) => ({ default: m.ProjectPage })))
 const DocsPage = lazy(() => import('./pages/DocsPage').then((m) => ({ default: m.DocsPage })))
+const LearnPage = lazy(() => import('./pages/LearnPage').then((m) => ({ default: m.LearnPage })))
+const PatternsPage = lazy(() => import('./pages/PatternsPage').then((m) => ({ default: m.PatternsPage })))
+const TopicsPage = lazy(() => import('./pages/TopicsPage').then((m) => ({ default: m.TopicsPage })))
+const TopicPage = lazy(() => import('./pages/TopicsPage').then((m) => ({ default: m.TopicPage })))
+const ComparePage = lazy(() => import('./pages/ComparePage').then((m) => ({ default: m.ComparePage })))
+const GalleryPage = lazy(() => import('./pages/GalleryPage').then((m) => ({ default: m.GalleryPage })))
+const GlossaryPage = lazy(() => import('./pages/GlossaryPage').then((m) => ({ default: m.GlossaryPage })))
+const ResourcesPage = lazy(() => import('./pages/ResourcesPage').then((m) => ({ default: m.ResourcesPage })))
+const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ default: m.RoadmapPage })))
+const ChangelogPage = lazy(() => import('./pages/ChangelogPage').then((m) => ({ default: m.ChangelogPage })))
+const FaqPage = lazy(() => import('./pages/FaqPage').then((m) => ({ default: m.FaqPage })))
+const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })))
+const ContributePage = lazy(() => import('./pages/ContributePage').then((m) => ({ default: m.ContributePage })))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })))
 import './styles.css'
 
 type Theme = 'light' | 'dark'
@@ -26,7 +40,9 @@ function initialTheme(): Theme {
 function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {
-    window.scrollTo({ top: 0 })
+    // Instant, not smooth: a smooth scroll is cut short when the next page is
+    // shorter than the last, which can leave the new page scrolled to its footer.
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }, [pathname])
   return null
 }
@@ -74,7 +90,20 @@ function App() {
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/projects/:slug" element={<ProjectPage />} />
             <Route path="/docs" element={<DocsPage />} />
-            <Route path="*" element={<Home />} />
+            <Route path="/learn" element={<LearnPage />} />
+            <Route path="/patterns" element={<PatternsPage />} />
+            <Route path="/topics" element={<TopicsPage />} />
+            <Route path="/topics/:slug" element={<TopicPage />} />
+            <Route path="/compare" element={<ComparePage />} />
+            <Route path="/gallery" element={<GalleryPage />} />
+            <Route path="/glossary" element={<GlossaryPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/roadmap" element={<RoadmapPage />} />
+            <Route path="/changelog" element={<ChangelogPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contribute" element={<ContributePage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>

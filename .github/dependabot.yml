@@ -1,0 +1,23 @@
+# Keeps the website's npm packages and the GitHub Actions workflows up to date.
+# Updates are grouped so each week brings at most one pull request per ecosystem.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /website
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      website:
+        patterns: ['*']
+        update-types: [minor, patch]
+    labels: [dependencies, website]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+    labels: [dependencies, ci]

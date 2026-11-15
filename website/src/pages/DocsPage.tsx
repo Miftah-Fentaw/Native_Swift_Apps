@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { AUTHOR, CLONE_COMMAND, REPO_URL, SITE_URL, community, githubReadme, githubRepoUrl, levels, projects, roadmap } from '../data/projects'
 import { AppIcon, CopyButton, LevelBadge, StatusBadge, usePageTitle } from '../components/ui'
+import { faqs } from '../data/learn'
+import { sitePages } from '../data/pages'
+import { Rich } from '../components/code'
 
 const SECTIONS = [
   { id: 'introduction', title: 'Introduction' },
@@ -151,7 +154,9 @@ export function DocsPage() {
 ├── Journal/           Journal — Xcode project, README, screenshots
 ├── website/           This explore hub (React + Vite)
 ├── assets/            Banner and app icons used by the READMEs
-├── .github/           Issue/PR templates and the website deploy workflow
+├── docs/              Templates for contributors, such as a project README
+├── .github/           Issue/PR templates, CI, deploy workflow and Dependabot
+├── CHANGELOG.md       Release notes, also shown on the Changelog page
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── SECURITY.md
@@ -234,6 +239,19 @@ export function DocsPage() {
         </Section>
 
         <Section id="website" title="Using this website">
+          <p>Every page on the site:</p>
+          <div className="doc-table" style={{ marginBottom: 20 }}>
+            {sitePages.map((p) => (
+              <Link key={p.path} to={p.path} className="doc-row">
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <b>{p.title}</b>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    #{p.path} · {p.description}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
           <ul>
             <li>
               <b>Explore</b> lists every app with filters for source (this repo or community), level, platform and technology, plus search.
@@ -272,6 +290,14 @@ export function DocsPage() {
             </li>
             <li>
               If the folder is new, add it to the <code>sources</code> list in <code>website/scripts/sync-assets.mjs</code>.
+            </li>
+            <li>
+              Optionally add code patterns to <code>website/src/data/patterns.ts</code> and steps to the learning tracks in{' '}
+              <code>website/src/data/learn.ts</code>. Patterns point at lines in the Swift source by anchor text, and the build fails if
+              an anchor can’t be found.
+            </li>
+            <li>
+              Add a release to <code>CHANGELOG.md</code>; the Changelog page is built from it.
             </li>
           </ol>
         </Section>
@@ -348,43 +374,22 @@ export function DocsPage() {
         </Section>
 
         <Section id="faq" title="FAQ">
-          <details className="faq">
-            <summary>Do the apps need any API keys or accounts?</summary>
-            <p>
-              Not the apps in this repo: SwiftCalc and Journal work fully offline, and Weather uses the free Open-Meteo APIs, which need no
-              key. A few community apps do — for example News App needs a NewsAPI key and Enchanted needs an Ollama server. Their project
-              pages say so.
-            </p>
-          </details>
-          <details className="faq">
-            <summary>Do the apps run on macOS?</summary>
-            <p>
-              The apps in this repo target iPhone and iPad. Many community apps run on the Mac — use the <b>macOS</b> filter on the{' '}
-              <Link className="doc-link" to="/explore?source=community&platform=macOS">
-                Explore page
-              </Link>
-              .
-            </p>
-          </details>
-          <details className="faq">
-            <summary>Can I use this code in my own app?</summary>
-            <p>
-              The code in this repository is MIT licensed — check third-party data terms too, such as Open-Meteo’s for commercial use.
-              Community apps have their own licenses (MIT, Apache, GPL, AGPL and others), shown on each project page. Read the license before
-              reusing any of their code.
-            </p>
-          </details>
-          <details className="faq">
-            <summary>Who maintains the community apps?</summary>
-            <p>
-              Their own authors. Report bugs and send pull requests to the app’s repository, not to Native Swift Apps. If a link breaks or an
-              app is no longer a good pick, open an issue here.
-            </p>
-          </details>
-          <details className="faq">
-            <summary>Is “Ask the hub” using AI?</summary>
-            <p>No. It is a keyword search over the project data, run in your browser. Nothing is sent anywhere.</p>
-          </details>
+          {faqs
+            .flatMap((g) => g.items)
+            .filter((f) => ['api-keys', 'macos', 'reuse', 'maintainers', 'ask-ai'].includes(f.id))
+            .map((f) => (
+              <details key={f.id} className="faq">
+                <summary>{f.q}</summary>
+                <p>
+                  <Rich text={f.a} />
+                </p>
+              </details>
+            ))}
+          <p style={{ marginTop: 16 }}>
+            <Link className="doc-link" to="/faq">
+              All {faqs.reduce((n, g) => n + g.items.length, 0)} questions on the FAQ page →
+            </Link>
+          </p>
         </Section>
 
         <Section id="credits" title="Credits & license">

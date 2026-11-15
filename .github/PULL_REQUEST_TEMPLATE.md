@@ -11,6 +11,7 @@ Which project(s) does this affect? (e.g. `calculator/`)
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Documentation
+- [ ] Website
 - [ ] Refactor
 
 ## Testing
@@ -30,4 +31,7 @@ Add screenshots for any visual change.
 - [ ] I have read [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [ ] My changes are scoped to the affected project
 - [ ] I updated the project's README if needed
+- [ ] If I changed the website data, I ran `npm run readme` in `website/`
+- [ ] If I renamed or moved Swift code, `npm run build` in `website/` still passes (code patterns quote it)
+- [ ] I added a line to `CHANGELOG.md` for anything users would notice
 - [ ] No secrets, `xcuserdata/` or `.DS_Store` files are included

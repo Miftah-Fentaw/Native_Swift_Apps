@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { usePageTitle } from '../components/ui'
 import { Hero } from '../sections/Hero'
 import { Pile, Stats } from '../sections/Story'
-import { AskHub, CommunityShowcase, Cta, LearningPath, Library, TechStack } from '../sections/Explore'
+import { AskHub, CommunityShowcase, Cta, KeepLearning, LearningPath, Library, TechStack } from '../sections/Explore'
 
 export function Home() {
   usePageTitle()
@@ -28,6 +28,7 @@ export function Home() {
       <AskHub />
       <LearningPath />
       <TechStack />
+      <KeepLearning />
       <Cta />
     </>
   )

@@ -8,7 +8,7 @@ By participating, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 - **Report a bug** — open an issue using the *Bug report* template.
 - **Suggest an improvement** — open an issue using the *Feature request* template.
-- **Improve documentation** — clarify a project README, fix errors, or add missing setup notes.
+- **Improve documentation** — clarify a project README, fix errors, or add missing setup notes. The *Documentation* issue template helps.
 - **Submit code** — fix a bug or implement an agreed-upon improvement in one of the projects.
 - **Suggest a community app** — recommend an open-source Swift app for the [Explore More](README.md#explore-more) list. See [Suggesting a Community App](#suggesting-a-community-app).
 
@@ -55,7 +55,7 @@ The [Explore More](README.md#explore-more) list links to open-source Swift apps 
 - still builds with a recent Xcode, or is well worth reading as a reference;
 - teaches something a learner can take away — a framework, a pattern or an architecture.
 
-To suggest one, open an issue with the *Community app suggestion* template. To add it yourself:
+To suggest one, fill in the [form on the website](https://miftah-fentaw.github.io/Native_Swift_Apps/#/contribute), which opens a pre-filled issue for you, or open an issue with the *Community app suggestion* template. To add it yourself:
 
 1. Add an entry to `community` in [`website/src/data/projects.ts`](website/src/data/projects.ts) with its name, `owner/repo`, level, platforms, license, tagline, description, technologies and what it teaches. Write the text from the app's own README.
 2. Regenerate the README tables from that data (needs Node.js 22.18 or later):
@@ -65,6 +65,35 @@ To suggest one, open an issue with the *Community app suggestion* template. To a
    ```
 
 3. Open a pull request. Never copy another project's code or screenshots into this repository — link to them.
+
+## Adding a New App
+
+New apps are welcome, but please open a feature request first so the idea and scope can be agreed. Then:
+
+1. Create a top-level folder with the Xcode project, unit and UI test targets.
+2. Write its README from [`docs/PROJECT_README_TEMPLATE.md`](docs/PROJECT_README_TEMPLATE.md), with screenshots in `<folder>/screenshots/` and the icon in `assets/`.
+3. Add it to `projects` in [`website/src/data/projects.ts`](website/src/data/projects.ts) (removing it from `roadmap`) and its screenshots folder to `website/scripts/sync-assets.mjs`.
+4. Optionally add code patterns to [`website/src/data/patterns.ts`](website/src/data/patterns.ts) and steps to the learning tracks in [`website/src/data/learn.ts`](website/src/data/learn.ts).
+5. Run `npm run readme` in `website/`, add a card to the root README's **The apps** section and a release to [`CHANGELOG.md`](CHANGELOG.md).
+
+## Working on the Website
+
+The explore hub in [`website/`](website/) is generated from data, so most changes are data changes:
+
+| To change… | Edit |
+| :--- | :--- |
+| An app's text, features or technology | `website/src/data/projects.ts` |
+| Learning tracks, glossary, topics, resources or FAQ | `website/src/data/learn.ts` |
+| Code patterns | `website/src/data/patterns.ts` (anchors into the Swift source) |
+| The Changelog page | [`CHANGELOG.md`](CHANGELOG.md) |
+
+Code patterns point at Swift code by anchor text rather than copying it, and the build fails if an anchor can't be found — so if you rename or move Swift code that a pattern quotes, update its anchors. Before opening a pull request, run:
+
+```bash
+cd website && npm run check
+```
+
+This checks that the README's generated sections are current, type-checks the site, validates every cross-reference in the data and builds it. The same checks run in CI on every pull request.
 
 ## Code Style
 
@@ -89,7 +118,8 @@ Clarify setup steps in calculator README
 1. Push your branch to your fork and open a pull request against `main`.
 2. Fill in the pull request template, including which project is affected and how you tested it.
 3. Add screenshots for any visual change.
-4. Be responsive to review feedback — small follow-up commits are fine.
+4. Add a line to [`CHANGELOG.md`](CHANGELOG.md) for anything users would notice.
+5. Be responsive to review feedback — small follow-up commits are fine.
 
 ## License
 
