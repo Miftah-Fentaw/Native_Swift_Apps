@@ -18,6 +18,9 @@ import {
 } from '../data/projects'
 import { AppIcon, CopyButton, Icon, LevelBadge, Lightbox, Phone, Reveal, StatusBadge, usePageTitle } from '../components/ui'
 import { ProjectCard } from '../components/layout'
+import { PatternChip } from '../components/bits'
+import { patternsFor } from '../data/patterns'
+import { topicPath, tracksFor } from '../data/learn'
 
 function Code({ text }: { text: string }) {
   return (
@@ -72,6 +75,8 @@ export function ProjectPage() {
 
   const repoUrl = project.repo ? githubRepoUrl(project.repo) : undefined
   const more = related(project)
+  const appPatterns = patternsFor(project.slug)
+  const appTracks = tracksFor(project.slug)
 
   return (
     <div style={{ ['--card-accent' as string]: project.accent }}>
@@ -141,6 +146,9 @@ export function ProjectPage() {
                 Browse source
               </a>
             )}
+            <Link className="btn btn-ghost" to={`/compare?apps=${[project.slug, ...more.slice(0, 2).map((p) => p.slug)].join(',')}`}>
+              Compare
+            </Link>
           </div>
         </div>
       </section>
@@ -219,7 +227,7 @@ export function ProjectPage() {
                 </ul>
                 <div className="tag-row" style={{ marginTop: 16 }}>
                   {project.tech.map((t) => (
-                    <Link key={t} className="tag" to={`/explore?tech=${encodeURIComponent(t)}`}>
+                    <Link key={t} className="tag" to={topicPath(t)}>
                       {t}
                     </Link>
                   ))}
@@ -278,6 +286,46 @@ export function ProjectPage() {
               </div>
             </Reveal>
           </div>
+
+          {(appPatterns.length > 0 || appTracks.length > 0) && (
+            <div className="two-col" style={{ marginTop: 20 }}>
+              {appPatterns.length > 0 && (
+                <Reveal>
+                  <div className="card" style={{ height: '100%' }}>
+                    <h4>Code patterns from {project.name}</h4>
+                    <div className="chip-col">
+                      {appPatterns.map((p) => (
+                        <PatternChip key={p.id} id={p.id} />
+                      ))}
+                    </div>
+                    <Link className="doc-link" to={`/patterns?app=${project.slug}`} style={{ display: 'inline-block', marginTop: 14, fontSize: 14 }}>
+                      Read them all with the code →
+                    </Link>
+                  </div>
+                </Reveal>
+              )}
+              {appTracks.length > 0 && (
+                <Reveal delay={0.08}>
+                  <div className="card" style={{ height: '100%' }}>
+                    <h4>Learning tracks with {project.name}</h4>
+                    <div className="chip-col">
+                      {appTracks.map((t) => {
+                        const step = t.steps.findIndex((s) => s.app === project.slug)
+                        return (
+                          <Link key={t.id} to={`/learn?t=${t.id}`} className="track-link" style={{ ['--track' as string]: t.accent }}>
+                            <b>{t.title}</b>
+                            <small>
+                              Step {step + 1} of {t.steps.length} · {t.steps[step].focus}
+                            </small>
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </Reveal>
+              )}
+            </div>
+          )}
         </div>
       </section>
 

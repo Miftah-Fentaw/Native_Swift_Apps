@@ -17,6 +17,9 @@ import {
 } from '../data/projects'
 import { AppIcon, CopyButton, Icon, Lightbox, Phone, Reveal, StatusBadge } from '../components/ui'
 import { ProjectCard } from '../components/layout'
+import { PageIcon } from '../components/icons'
+import { sitePages } from '../data/pages'
+import { topicPath } from '../data/learn'
 
 const TABS = ['Apps', 'Screens', 'Features', 'Technology', 'Roadmap'] as const
 type Tab = (typeof TABS)[number]
@@ -133,7 +136,9 @@ function TechGrid() {
     <div className="tech-grid" style={{ marginTop: 0 }}>
       {allTech.map((t, i) => (
         <motion.div key={t.name} className="tech-card" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.03 }}>
-          <strong>{t.name}</strong>
+          <Link to={topicPath(t.name)} className="tech-card-name">
+            <strong>{t.name}</strong>
+          </Link>
           <div className="tech-icons">
             {t.projects.map((p) => (
               <Link key={p.slug} to={`/projects/${p.slug}`} title={p.name}>
@@ -489,6 +494,41 @@ export function TechStack() {
           </p>
         </Reveal>
         <TechGrid />
+      </div>
+    </section>
+  )
+}
+
+/** Cards for the learning pages, so they are one click from the home page. */
+export function KeepLearning() {
+  const pages = sitePages.filter((p) => p.featured)
+  return (
+    <section className="section" id="keep-learning" style={{ paddingTop: 40 }}>
+      <div className="container">
+        <Reveal>
+          <div style={{ textAlign: 'center' }}>
+            <div className="eyebrow">Keep learning</div>
+            <h2 className="h-section">
+              More ways in.
+              <br />
+              <span className="muted">Tracks, patterns, topics and more.</span>
+            </h2>
+          </div>
+        </Reveal>
+        <div className="page-grid">
+          {pages.map((p, i) => (
+            <Reveal key={p.path} delay={i * 0.04}>
+              <Link to={p.path} className="page-card">
+                <span className="page-card-icon">
+                  <PageIcon name={p.icon} />
+                </span>
+                <b>{p.title}</b>
+                <small>{p.description}</small>
+                <span className="page-card-go">{Icon.arrow}</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   )

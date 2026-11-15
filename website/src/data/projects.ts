@@ -200,12 +200,13 @@ export const projects: Project[] = [
     description:
       'Entries that mix text, a checklist and a photo, stored on device with SwiftData. Includes a calendar, mood insights, search, onboarding and a biometric lock.',
     platforms: 'iOS · iPadOS 27.2+',
-    tech: ['Swift', 'SwiftUI', 'SwiftData', 'Swift Charts', 'PhotosUI', 'LocalAuthentication'],
+    tech: ['Swift', 'SwiftUI', 'SwiftData', 'Swift Charts', 'PhotosUI', 'LocalAuthentication', 'UserNotifications', 'Foundation', 'XCTest'],
     learn: [
       'Modeling and querying data with SwiftData',
       'Charts for mood insights',
       'Picking photos with PhotosUI',
       'Biometric unlock with LocalAuthentication',
+      'Daily reminders with UserNotifications',
       'Custom masonry layouts',
     ],
     features: [
@@ -219,7 +220,7 @@ export const projects: Project[] = [
       },
       {
         title: 'App',
-        items: ['Onboarding', 'Biometric lock', 'Settings with profile photo'],
+        items: ['Onboarding', 'Biometric lock', 'Daily writing reminder', 'Settings with profile photo'],
       },
     ],
     screens: [

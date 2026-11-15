@@ -1,8 +1,70 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import { AUTHOR, CLONE_COMMAND, REPO_URL, allTech, community, isCommunity, projects, roadmap, type Project } from '../data/projects'
+import { AUTHOR, CLONE_COMMAND, REPO_URL, community, isCommunity, projects, roadmap, type Project } from '../data/projects'
+import { patterns } from '../data/patterns'
+import { glossary, topics, tracks } from '../data/learn'
+import { pageGroups, sitePages } from '../data/pages'
 import { AppIcon, Icon, LevelBadge, Phone, StatusBadge } from './ui'
+import { PageIcon } from './icons'
+
+/** The nav's "More" dropdown: every page, grouped. */
+function MoreMenu() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation()
+
+  useEffect(() => setOpen(false), [pathname])
+  useEffect(() => {
+    if (!open) return
+    const onDown = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false)
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  return (
+    <div className="more" ref={ref}>
+      <button className={`more-btn ${open ? 'open' : ''}`} onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-haspopup="true">
+        More {Icon.chevron}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            className="more-menu"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.98 }}
+            transition={{ duration: 0.18 }}
+          >
+            {pageGroups.map((g) => (
+              <div key={g} className="more-group">
+                <div className="more-title">{g}</div>
+                {sitePages
+                  .filter((p) => p.group === g)
+                  .map((p) => (
+                    <Link key={p.path} to={p.path} className={`more-item ${pathname === p.path ? 'active' : ''}`}>
+                      <span className="more-icon">
+                        <PageIcon name={p.icon} size={18} />
+                      </span>
+                      <span>
+                        <b>{p.title}</b>
+                        <small>{p.description}</small>
+                      </span>
+                    </Link>
+                  ))}
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 export function Nav({ theme, onToggleTheme, onOpenSearch }: { theme: string; onToggleTheme: () => void; onOpenSearch: () => void }) {
   // Three floating pills: brand on the left, logo + links in the middle, actions on the right.
@@ -22,12 +84,13 @@ export function Nav({ theme, onToggleTheme, onOpenSearch }: { theme: string; onT
             <NavLink to="/explore" end>
               Explore
             </NavLink>
+            <NavLink to="/learn">Learn</NavLink>
+            {/* Third and later links are hidden on phones; every page is in the More menu. */}
+            <NavLink to="/patterns">Patterns</NavLink>
+            <NavLink to="/topics">Topics</NavLink>
             <NavLink to="/docs">Docs</NavLink>
-            {/* Third and later links are hidden on phones; the community apps are one tap away from Explore. */}
-            <a href="#/explore?source=community">Community</a>
-            <a href="#/?s=path">Learning path</a>
-            <a href="#/?s=roadmap">Roadmap</a>
           </div>
+          <MoreMenu />
         </nav>
 
         <div className="nav-pill nav-actions">
@@ -63,7 +126,7 @@ const ext = { target: '_blank', rel: 'noreferrer' } as const
 
 /** Animated footer: link columns, a scrolling tech ticker and a giant wordmark that rises in letter by letter. */
 export function Footer() {
-  const ticker = [...allTech.map((t) => t.name), ...projects.map((p) => p.name)]
+  const ticker = [...topics.filter((t) => !t.isPlatform).slice(0, 18).map((t) => t.name), ...projects.map((p) => p.name)]
   const year = new Date().getFullYear()
 
   return (
@@ -104,20 +167,33 @@ export function Footer() {
               {p.name}
             </Link>
           ))}
-          <a href="#/?s=roadmap">Roadmap</a>
+          <Link to="/roadmap">Roadmap</Link>
+          <Link to="/changelog">Changelog</Link>
+          <Link to="/about">About</Link>
         </FooterColumn>
 
         <FooterColumn title="Explore">
           <Link to="/explore">All projects</Link>
           <Link to="/explore?source=community">Community apps ({community.length})</Link>
-          <Link to="/docs">Documentation</Link>
-          <a href="#/?s=path">Learning path</a>
+          <Link to="/topics">Topics</Link>
+          <Link to="/compare">Compare</Link>
+          <Link to="/gallery">Gallery</Link>
           <a href="#/?s=ask">Ask the hub</a>
+        </FooterColumn>
+
+        <FooterColumn title="Learn">
+          <Link to="/learn">Learning tracks</Link>
+          <Link to="/patterns">Code patterns</Link>
+          <Link to="/glossary">Glossary</Link>
+          <Link to="/resources">Resources</Link>
+          <Link to="/docs">Documentation</Link>
+          <Link to="/faq">FAQ</Link>
         </FooterColumn>
 
         <FooterColumn title="Repository">
           <a href={REPO_URL} {...ext}>GitHub</a>
-          <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} {...ext}>Contributing</a>
+          <Link to="/contribute">Contribute</Link>
+          <a href={`${REPO_URL}/blob/main/CONTRIBUTING.md`} {...ext}>Contributing guide</a>
           <a href={`${REPO_URL}/blob/main/CODE_OF_CONDUCT.md`} {...ext}>Code of conduct</a>
           <a href={`${REPO_URL}/blob/main/SECURITY.md`} {...ext}>Security</a>
           <a href={`${REPO_URL}/blob/main/LICENSE`} {...ext}>MIT License</a>
@@ -126,6 +202,7 @@ export function Footer() {
         <FooterColumn title="Author">
           <a href={AUTHOR.url} {...ext}>{AUTHOR.name}</a>
           <a href={`${AUTHOR.url}?tab=repositories`} {...ext}>More projects</a>
+          <Link to="/about">About the project</Link>
         </FooterColumn>
       </div>
 
@@ -223,7 +300,7 @@ export function ProjectCard({ project, index = 0 }: { project: Project; index?: 
   )
 }
 
-type PaletteItem = { group: string; label: string; hint?: string; project?: Project; run: () => void }
+type PaletteItem = { group: string; label: string; hint?: string; project?: Project; icon?: import('../data/pages').PageIcon; run: () => void }
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate()
@@ -243,12 +320,22 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           f.items.map((item) => ({ group: 'Features', label: item, hint: p.name, project: p, run: go(`/projects/${p.slug}`) })),
         ),
       ),
-      ...allTech.map((t) => ({
-        group: 'Technology',
+      ...sitePages.map((p) => ({ group: 'Pages', label: p.title, hint: p.description, icon: p.icon, run: go(p.path) })),
+      ...topics.map((t) => ({
+        group: t.isPlatform ? 'Platforms' : 'Technology',
         label: t.name,
-        hint: t.projects.map((p) => p.name).join(', '),
-        run: go(`/explore?tech=${encodeURIComponent(t.name)}`),
+        hint: `${t.apps.length} ${t.apps.length === 1 ? 'app' : 'apps'} · ${t.info.kind}`,
+        run: go(`/topics/${t.slug}`),
       })),
+      ...tracks.map((t) => ({ group: 'Learning tracks', label: t.title, hint: `${t.level} · ${t.steps.length} steps`, icon: 'path' as const, run: go(`/learn?t=${t.id}`) })),
+      ...patterns.map((p) => ({
+        group: 'Code patterns',
+        label: p.title,
+        hint: projects.find((x) => x.slug === p.project)?.name,
+        icon: 'code' as const,
+        run: go(`/patterns?p=${p.id}`),
+      })),
+      ...glossary.map((t) => ({ group: 'Glossary', label: t.term, hint: t.kind, icon: 'book' as const, run: go(`/glossary?t=${t.id}`) })),
       ...community.map((p) => ({
         group: 'Community apps',
         label: p.name,
@@ -256,7 +343,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         project: p,
         run: go(`/projects/${p.slug}`),
       })),
-      ...roadmap.map((p) => ({ group: 'Roadmap', label: p.name, hint: `${p.level} · planned`, run: go('/?s=roadmap') })),
+      ...roadmap.map((p) => ({ group: 'Roadmap', label: p.name, hint: `${p.level} · planned`, run: go('/roadmap') })),
       {
         group: 'Actions',
         label: 'Copy clone command',
@@ -273,11 +360,17 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     if (!q)
       return [
         ...all.filter((i) => i.group === 'Projects'),
-        ...all.filter((i) => i.group === 'Community apps').slice(0, 5),
+        ...all.filter((i) => i.group === 'Pages').slice(0, 6),
+        ...all.filter((i) => i.group === 'Community apps').slice(0, 4),
         ...all.filter((i) => i.group === 'Technology').slice(0, 4),
         ...all.filter((i) => i.group === 'Actions'),
       ]
-    return all.filter((i) => `${i.label} ${i.hint ?? ''}`.toLowerCase().includes(q)).slice(0, 30)
+    // Matches on the label rank above matches on the hint; the group order is kept within each.
+    const hits = all.filter((i) => `${i.label} ${i.hint ?? ''}`.toLowerCase().includes(q))
+    const byLabel = hits.filter((i) => i.label.toLowerCase().includes(q))
+    const ranked = [...byLabel, ...hits.filter((i) => !byLabel.includes(i))]
+    const order = [...new Set(ranked.map((i) => i.group))]
+    return order.flatMap((g) => ranked.filter((i) => i.group === g)).slice(0, 40)
   }, [query, navigate, onClose])
 
   useEffect(() => {
@@ -326,7 +419,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="Search projects, features and technology…"
+                placeholder="Search apps, pages, patterns, terms…"
                 aria-label="Search"
               />
               <kbd className="muted">esc</kbd>
@@ -344,7 +437,15 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                       onMouseEnter={() => setSelected(i)}
                       onClick={item.run}
                     >
-                      {item.project ? <AppIcon project={item.project} size={24} /> : <span style={{ width: 24, textAlign: 'center' }}>›</span>}
+                      {item.project ? (
+                        <AppIcon project={item.project} size={24} />
+                      ) : item.icon ? (
+                        <span className="palette-icon">
+                          <PageIcon name={item.icon} size={16} />
+                        </span>
+                      ) : (
+                        <span style={{ width: 24, textAlign: 'center' }}>›</span>
+                      )}
                       <span>{item.label}</span>
                       {item.hint && <small>{item.hint}</small>}
                     </button>

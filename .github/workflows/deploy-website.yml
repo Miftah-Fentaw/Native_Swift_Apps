@@ -9,8 +9,11 @@ on:
     paths:
       - 'website/**'
       - 'README.md'
+      - 'CHANGELOG.md'
       - 'assets/**'
       - '*/screenshots/**'
+      # The Patterns page quotes the apps' Swift source.
+      - '**/*.swift'
       - '.github/workflows/deploy-website.yml'
   workflow_dispatch:
 
@@ -41,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check the README lists the same community apps
+      - name: Check the README's generated sections
         run: npm run readme -- --check
 
       - name: Build

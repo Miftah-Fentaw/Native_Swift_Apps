@@ -1,0 +1,59 @@
+name: CI
+
+# Checks every pull request (and every push to main) that touches the website,
+# the README, the changelog or the Swift source the website quotes:
+#   - the README's generated sections match the website data
+#   - the website type-checks and builds, which also validates the data's
+#     cross-references and every code-pattern anchor in the Swift files
+
+on:
+  pull_request:
+    paths:
+      - 'website/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '**/*.swift'
+      - 'assets/**'
+      - '*/screenshots/**'
+      - '.github/workflows/ci.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'website/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '**/*.swift'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  website:
+    name: Website and README
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check the README's generated sections
+        run: npm run readme -- --check
+
+      - name: Type-check and build
+        run: npm run build

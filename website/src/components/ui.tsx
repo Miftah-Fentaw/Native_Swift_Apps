@@ -116,30 +116,75 @@ export function CopyButton({ text, label = 'Copy', className = 'copy-btn' }: { t
   )
 }
 
-export function Lightbox({ screen, onClose }: { screen: Screen | null; onClose: () => void }) {
+/** Full-screen screenshot. With `onPrev`/`onNext`, the arrow keys and buttons step through a set. */
+export function Lightbox({
+  screen,
+  onClose,
+  onPrev,
+  onNext,
+  caption,
+}: {
+  screen: Screen | null
+  onClose: () => void
+  onPrev?: () => void
+  onNext?: () => void
+  caption?: string
+}) {
   useEffect(() => {
     if (!screen) return
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      else if (e.key === 'ArrowLeft') onPrev?.()
+      else if (e.key === 'ArrowRight') onNext?.()
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [screen, onClose])
+  }, [screen, onClose, onPrev, onNext])
 
   return (
     <AnimatePresence>
       {screen && (
-        <motion.div className="overlay" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.img
-            className="lightbox-img"
-            src={screen.src}
-            alt={screen.label}
-            initial={{ scale: 0.9, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 26 }}
-          />
+        <motion.div
+          className="overlay"
+          onClick={onClose}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={screen.label}
+        >
+          {onPrev && (
+            <button className="lightbox-nav prev" onClick={(e) => (e.stopPropagation(), onPrev())} aria-label="Previous screenshot">
+              {Icon.left}
+            </button>
+          )}
+          <motion.figure className="lightbox-figure" initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0 }} transition={{ type: 'spring', stiffness: 260, damping: 26 }}>
+            <motion.img key={screen.src} className="lightbox-img" src={screen.src} alt={screen.label} initial={{ opacity: 0.4 }} animate={{ opacity: 1 }} />
+            {caption && <figcaption>{caption}</figcaption>}
+          </motion.figure>
+          {onNext && (
+            <button className="lightbox-nav next" onClick={(e) => (e.stopPropagation(), onNext())} aria-label="Next screenshot">
+              {Icon.right}
+            </button>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+/** Section heading used across the secondary pages. */
+export function PageHead({ eyebrow, title, lead, children }: { eyebrow: string; title: ReactNode; lead?: ReactNode; children?: ReactNode }) {
+  return (
+    <div className="page-head">
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}>
+        <div className="eyebrow">{eyebrow}</div>
+        <h1 className="h-section">{title}</h1>
+        {lead && <p className="lead">{lead}</p>}
+        {children}
+      </motion.div>
+    </div>
   )
 }
 
@@ -174,6 +219,36 @@ export const Icon = {
   moon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" />
+    </svg>
+  ),
+  left: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+  ),
+  right: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  ),
+  chevron: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  ),
+  check: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m5 12 5 5 9-10" />
+    </svg>
+  ),
+  close: (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  ),
+  external: (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
     </svg>
   ),
 }

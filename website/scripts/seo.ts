@@ -4,6 +4,7 @@
 //   <!--seo:jsonld-->    JSON-LD structured data (WebSite, Person, ItemList)
 //   <!--seo:noscript-->  a plain list of links inside <noscript>
 import { AUTHOR, REPO_URL, SITE_URL, allProjects, community, githubRepoUrl, githubTree, projects, type Project } from '../src/data/projects'
+import { sitePages } from '../src/data/pages'
 
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -79,5 +80,7 @@ export function noscript() {
     `<ul>${projects.map(item).join('')}</ul>`,
     `<h2>Community apps</h2>`,
     `<ul>${community.map(item).join('')}</ul>`,
+    `<h2>Pages</h2>`,
+    `<ul>${sitePages.map((p) => `<li><a href="${SITE_URL}#${p.path}">${escapeHtml(p.title)}</a> — ${escapeHtml(p.description)}</li>`).join('')}</ul>`,
   ].join('\n      ')
 }

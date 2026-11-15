@@ -3,3 +3,9 @@ contact_links:
   - name: Report a security vulnerability
     url: https://github.com/Miftah-Fentaw/Native_Swift_Apps/security/advisories/new
     about: Please report security issues privately, not as public issues.
+  - name: Read the FAQ
+    url: https://miftah-fentaw.github.io/Native_Swift_Apps/#/faq
+    about: Answers about running the apps, the community picks and the website.
+  - name: Suggest a community app with the form
+    url: https://miftah-fentaw.github.io/Native_Swift_Apps/#/contribute
+    about: Fill in a short form that opens a pre-filled suggestion for you.
